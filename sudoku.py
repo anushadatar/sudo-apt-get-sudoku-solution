@@ -36,3 +36,10 @@ def create_blank_graph(dim):
     graph.add_nodes_from(range(1, dim**2 + 1))
     graph.add_edges_from(blank_graph_edges(dim))
     return graph
+
+def main():
+    create_blank_graph(4)
+
+if __name__ == '__main__':
+    main()
+    print("Ran main method")
