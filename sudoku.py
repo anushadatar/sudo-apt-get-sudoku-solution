@@ -12,18 +12,17 @@ def blank_graph_edges(graph, dim):
     """
     Returns edges for a blank graph based on the dimension.
     """
-    for x in range(1,13,4):
-        for i in range (x,x+2):
-            for j in range(i+1,i+3):
+    for x in range(1,16,4):
+        for i in range (x,x+3):
+            for j in range(i+1,x+4):
                 graph.add_edge(i,j)
 
-    for x in range (1,4):
-        for i in range(x,x+8,4):
-            for j in range(i+4,i+12,4)
+    for x in range (1,5):
+        for i in range(x,x+9,4):
+            for j in range(i+4,x+13,4):
                 graph.add_edge(i,j)
 
-    add_edges_from([(1,6), (2, 5), (3, 😎, (4, 7), (9, 14), (10, 13), (11, 16), (12, 15)])
-    add_edges_from([(1,6), (2, 5), (3, 8 ), (4, 7), (9, 14), (10, 13), (11, 16), (12, 15)])
+    graph.add_edges_from([(1,6), (2, 5), (3, 8), (4, 7), (9, 14), (10, 13), (11, 16), (12, 15)])
     return graph
 
 def create_blank_graph(dim):
@@ -34,12 +33,34 @@ def create_blank_graph(dim):
     """
     graph = networkx.Graph()
     graph.add_nodes_from(range(1, dim**2 + 1))
-    graph.add_edges_from(blank_graph_edges(dim))
+    blank_graph_edges(graph,dim)
     return graph
 
+def optimal_spot(graph,adj):
+    pos =0
+    max = 0
+    for k in adj.keys():
+        if graph.nodes[k]['color'] == "":
+            count =0
+            for p in adj[k].keys():
+                if graph.nodes[p]['color'] != "":
+                    count+=1
+            if count>max:
+                max= count
+                pos = k
+    return pos
+
 def main():
-    create_blank_graph(4)
+    input_string=['3', '', '4', '2', '', '', '', '', '', '', '', '', '2', '', '', '3']
+    sudoku = create_blank_graph(4)
+    for l in range(len(input_string)):
+        sudoku.nodes[l+1]["color"]=input_string[l]
+    adjacent = networkx.to_dict_of_dicts(sudoku)
+    pos = optimal_spot(sudoku,adjacent)
+    print(pos)
+    plt.subplot(121)
+    networkx.draw(sudoku, with_labels=True, font_weight='bold')
+    plt.show()
 
 if __name__ == '__main__':
     main()
-    print("Ran main method")
