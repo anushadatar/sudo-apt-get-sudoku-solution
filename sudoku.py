@@ -70,7 +70,7 @@ def create_general_graph(size):
         for group in nodeLists:
             connectedGraph = nx.complete_graph((iter(group)), nx.Graph)
             graph = nx.algorithms.operators.binary.compose(graph, connectedGraph)
-    print(list(graph.nodes()))
+    # print(list(graph.nodes()))
     return graph
 
 
@@ -97,29 +97,53 @@ def optimal_spot(graph, adj):
     return pos
 
 
-def choose_color(graph, adj):
-    position = optimal_spot(graph, adj)
+def choose_color(graph, adj, position):
+    # position = optimal_spot(graph, adj)
     adjacentVertices = adj[position]
     usedColors = set()
     for vertex in adjacentVertices.keys():
         usedColors.add(graph.nodes[vertex]['color'])
     for color in range(1, SIZE+1):
-        if color not in usedColors:
+        if str(color) not in usedColors:
             return color
+
+
+def fill_colors(graph):
+    colored = 0
+    size = len(graph.nodes)
+    for node in graph.nodes:
+        if graph.nodes[node]['color'] != '':
+            colored += 1
+    while (colored < size):
+        # display_sudoku(graph)
+        adjacent = nx.to_dict_of_dicts(graph)
+        pos = optimal_spot(graph, adjacent)
+        color = choose_color(graph, adjacent, pos)
+        graph.nodes[pos]['color'] = str(color)
+        colored += 1
+
+
+def display_sudoku(graph):
+    size = int(math.sqrt(len(graph.nodes)))
+    colors = []
+    for node in range(1, size*size+1):
+        colors.append(graph.nodes[node]['color'])
+    for i in range(size):
+        print(colors[i*size:i*size+size])
+    print()
 
 
 def main():
     input_string = ['3', '', '4', '2', '', '', '', '', '', '', '', '', '2', '', '', '3']
-    sudoku = create_general_graph(4)
-    # sudoku = create_blank_graph(4)
+    sudoku = create_general_graph(SIZE)
     for l in range(len(input_string)):
-        sudoku.nodes[l+1]["color"]=input_string[l]
-    adjacent = nx.to_dict_of_dicts(sudoku)
-    print(adjacent)
-    pos = optimal_spot(sudoku,adjacent)
-    print(pos)
-    print('COLOR TO CHOOSE: ' + str(choose_color(sudoku, adjacent)))
-
+        sudoku.nodes[l+1]["color"] = input_string[l]
+    # print(adjacent)
+    print('Starting board:')
+    display_sudoku(sudoku)
+    fill_colors(sudoku)
+    print('Completed board')
+    display_sudoku(sudoku)
     # plt.subplot(121)
     # nx.draw(sudoku, with_labels=True, font_weight='bold')
     # plt.show()
