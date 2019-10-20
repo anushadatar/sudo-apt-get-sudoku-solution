@@ -1,4 +1,4 @@
-# sudo apt-get sudoku-solution
+# *sudo apt-get sudoku-solution*
 A python sudoku solver as an investigation of graph coloring algorithms for Olin College Discrete Mathematics FA19 Homework 5 Investigation by Diego Berny, Jordan Crawford-O'Banner, and Anusha Datar.
 
 # Graph Coloring
