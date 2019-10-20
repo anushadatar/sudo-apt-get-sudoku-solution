@@ -9,9 +9,6 @@ import networkx as nx
 import math
 import matplotlib.pyplot as plt
 
-# The length of each row/column on the sudoku board.
-SIZE = 9 
-
 def create_general_graph(size):
     """
     Create a general sudoku graph for specified size.
@@ -105,7 +102,7 @@ def choose_color(graph, adj, position):
     unusedColors = []
     for vertex in adjacentVertices.keys():
         usedColors.add(graph.nodes[vertex]['color'])
-    for color in range(1, SIZE+1):
+    for color in range(1, int(math.sqrt(len(graph.nodes)))+1):
         if str(color) not in usedColors:
             unusedColors.append(color)
     return unusedColors
@@ -120,15 +117,17 @@ def fill_colors(graph):
     """
         
     size = len(graph.nodes)
-    display_sudoku(graph)
+    # display_sudoku(graph)
     adjacent = nx.to_dict_of_dicts(graph)
     pos = optimal_spot(graph, adjacent)
+    if pos == 0:
+        return graph
     colors = choose_color(graph, adjacent, pos)
     if len(colors) != 0:
         for color in colors: 
             # Make a copy of the graph, add the color, run fill_colors again          
             filled_graph = populate_color(graph.copy(), pos, color)    
-            if is_solution(filled_graph):
+            if is_populated(filled_graph):
                 return filled_graph
             else:
                 continue 
@@ -147,16 +146,14 @@ def populate_color(graph, pos, color):
     else:
         return new_graph
 
-def is_solution(graph):
+def is_populated(graph):
     size = int(math.sqrt(len(graph.nodes)))
     colors = []                       
     for node in range(1, size*size+1):      
        colors.append(graph.nodes[node]['color'])
     for color in colors:
         if color == '':
-            print("failed solution")
             return False
-    print("found solution")
     return True
 
 def display_sudoku(graph):
@@ -169,9 +166,9 @@ def display_sudoku(graph):
     colors = []
     for node in range(1, size*size+1):
         colors.append(graph.nodes[node]['color'])
-    for i in range(size):
-        if color[i] == '': 
-            color[i] = 0     
+    for i in range(size*size):
+        if colors[i] == '': 
+            colors[i] = '-'     
     for i in range(size):
         print(colors[i*size:i*size+size])
     print()
@@ -180,7 +177,9 @@ def display_sudoku(graph):
 def main():
     # String containing the values to pre-populate in the sudoku board.
     # input_string = ['', '', '4', '3', '', '', '', '', '', '', '', '', '', '2', '3', '']
-    input_string = ['9', '', '', '6', '4', '', '', '', '3', '2','7','','','9','','5','8','','','1','','5','8','','','','','','9','','','','','7','','','','','7','9','6','5','8','','','','','2','','','','','4','','','','','','5','3','','6','','','5','1','','7','','','2','8','4','','','','1','6','','','5']
+   #  input_string = ['9', '', '', '6', '4', '', '', '', '3', '2','7','','','9','','5','8','','','1','','5','8','','','','','','9','','','','','7','','','','','7','9','6','5','8','','','','','2','','','','','4','','','','','','5','3','','6','','','5','1','','7','','','2','8','4','','','','1','6','','','5']
+    input_string = ['','','6','','','','7','','1','','','','','9','','','','','1','','4','8','','','','','5','9','5','','','','','4','','','','','7','','1','','9','','','','','1','','','','','7','6','2','','','','','5','6','','8','','','','','6','','','','','4','','9','','','','2','','']
+
     # Create and populate networkx graph for sudoku board.
     sudoku = create_general_graph(int(math.sqrt(len(input_string))))
     for l in range(len(input_string)):
