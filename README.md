@@ -18,23 +18,22 @@ These puzzles can be represented as sudoku graphs, which are undirected graphs w
 
 # Graph Coloring for Sudoku
 ## Implementation
+We were able to generalize the solver to solve a sudoku puzzle of any size, although it takes a lot longer the bigger they get. In the cases of a non-standard sudoku board, the number of colors *m* simply corresponds to the number of rows/columns in the grid, as in a normal 9x9 puzzle.
 
 In order to fully "color" the sudoku with the correct number in each box, we start by finding which node has the most colored neighbors. Once we have found this node, we narrow down the possible colors it can be by removing all the colors that its neighbors have. The algorithm inserts one of the possibilities into the graph, and repeats the process of finding the next node to fill.
 
-If the color was correct, it will keep adding colors until the entire puzzle is solved. If for any node its neighbors already have 9 different colors, the solution is incorrect because we know that the graph can be colored using exactly 9 colors. In this case where it happened to guess an incorrect solution it will go back to that decision point and try a different color, to see if it works with that one. This is a common tactic called backtracking, used when you are slowly working towards a solution by making guesses to get closer.
+If the color was correct, it will keep adding colors until the entire puzzle is solved. If for any node its neighbors already have *m* different colors, the solution is incorrect because we know that the graph can be colored using exactly *m* colors. In this case where it happened to guess an incorrect solution it will go back to that decision point and try a different color, to see if it works with that one. This is a common tactic called backtracking, used when you are slowly working towards a solution by making guesses to get closer.
 
 <p align="center">
   <img src="https://static.javatpoint.com/tutorial/daa/images/backtracking-introduction.png"/></p>
   <p align="center">Image of a backtracking algorithm from javatpoint.com<p align="center">
 
-We were able to generalize the solver to solve a sudoku of any size, although it takes a lot longer the bigger they get. In the cases of a non-standard sudoku board, the number of colors simply corresponds to the number of rows/columns in the grid, as in a normal 9x9 puzzle.
 
 <p align="center">
   <img src="sudokuScreenshot.png"/></p>
   <p align="center">Our script solving a 9x9 sudoku grid <p align="center">
 
 ## Evaluation
-In general, graph coloring is computationally complex. Finding the chromatic number of a graph is an NP-hard problem. NP stands for non-deterministic polynomial acceptable problems, and problems that are NP-hard are at least as difficult as problems that are NP-Complete. NP-Complete problems cannot be solved in polynomial time, but a potential solution can be validated in polynomial time - so solving the problem requires exhaustively testing all types of possible cases, which is both time and computationally intensive. Meanwhile, finding a 3-coloring for a graph is an NP-complete problem. While advances in graph theory and computational infrastructure mean that solving these NP-hard/NP-complete problems is certainly possible, there is still great overhead associated with them.
-
 Our algorithm produces a valid solution, but it does so very slowly. In the end we had a potential maximum time complexity of O((m^N)\*N)  and a space complexity of O(m\*N),  where m is the number of colors/numbers in a given puzzle and N is the number of spaces. Since our implementation has to create a new iteration of the solution for every possible color/number that each space could be, it has m possible total iterations to create, and each of these iterations must loop through all N of the spaces within the sudoku puzzle. This has a chance of happening at most N times, if the puzzle is completely empty. Therefore we end up with a time complexity of O((m^N)\*N). We have a space complexity of O(m\*N) because we need to keep track of all N possible spaces for each of the m iterations. We are not surprised that the time complexity scales poorly with the size of the sudoku puzzle because the larger a puzzle is, the more potential colorings that need to be evaluated.
 
+In general, graph coloring is computationally complex. Finding the chromatic number of a graph is an NP-hard problem. NP stands for non-deterministic polynomial acceptable problems, and problems that are NP-hard are at least as difficult as problems that are NP-Complete. NP-Complete problems cannot be solved in polynomial time, but a potential solution can be validated in polynomial time - so solving the problem requires exhaustively testing all types of possible cases, which is both time and computationally intensive. Meanwhile, finding a 3-coloring for a graph is an NP-complete problem. While advances in graph theory and computational infrastructure mean that solving these NP-hard/NP-complete problems is certainly possible, there is still great overhead associated with them.
