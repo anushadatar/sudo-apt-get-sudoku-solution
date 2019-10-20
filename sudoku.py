@@ -3,8 +3,8 @@
 """
 Python code associated with graph-coloring based solution to a sudoku puzzle.
 
-To solve a puzzle, provide a string with all of the pre-filled in numbers 
-(or empty strings for blank boxes) as the value of input_string in the main 
+To solve a puzzle, provide a string with all of the pre-filled in numbers
+(or empty strings for blank boxes) as the value of input_string in the main
 method. The program will compute the solution using graph coloring and print
 it to the console.
 """
@@ -17,7 +17,7 @@ def create_general_graph(size):
     Create a blank sudoku graph with the specified size (as row length).
 
     size : Integer value of the row length of the graph.
-    
+
     returns : Networkx graph of stated size with sudoku edges.
     """
     # Populate rows and columns.
@@ -39,7 +39,7 @@ def create_general_graph(size):
                 boxList.append(start + row*size + i)
         boxLists.append(boxList)
     allLists = [rowLists, columnLists, boxLists]
-    
+
     # Instantiate graph and connect edges based on lists.
     graph = nx.Graph()
     for nodeLists in allLists:
@@ -53,9 +53,9 @@ def get_box_nums(size):
     """
     Get the coordinates for the positions on the graph of where the individual
     boxes of connected nodes must start.
-    
+
     size : The integer length of a single row or column in the graph.
-    
+
     returns : List of the indices for the start indices of the boxes (as ints).
     """
 
@@ -68,12 +68,12 @@ def get_box_nums(size):
 
 def optimal_spot(graph, adj):
     """
-    Determine the optimal spot to determine the color for, based on the number 
+    Determine the optimal spot to determine the color for, based on the number
     of existing prepopulated vertices.
-    
+
     graph : The networkx sudoku graph used in the problem.
     adj : The networkx dictionary adjacency matrix associated with the graph.
-   
+
     returns : Integer index of the best vertex to find the color of.
     """
     pos = 0
@@ -94,7 +94,7 @@ def optimal_spot(graph, adj):
 
 def choose_color(graph, adj, position):
     """
-    Determine which of the available colors should be placed in a given 
+    Determine which of the available colors should be placed in a given
     position on the graph.
 
     graph : The networkx sudoku graph used in the problem.
@@ -116,8 +116,8 @@ def choose_color(graph, adj, position):
 
 def fill_colors(graph):
     """
-    Use a graph coloring strategy to populate the graph with the appropiate 
-    colors to solve the puzzle. This method is recursively called by 
+    Use a graph coloring strategy to populate the graph with the appropiate
+    colors to solve the puzzle. This method is recursively called by
     populate_color when there are multiple possible paths to explore.
 
     graph : The graph networkx sudoku graph containing the puzzle to solve.
@@ -132,26 +132,26 @@ def fill_colors(graph):
     colors = choose_color(graph, adjacent, pos)
     # If there are possible colors left, try each path to look for a solution.
     if len(colors) != 0:
-        for color in colors: 
-            # Make a copy of the graph, add the color, run fill_colors again.      
-            filled_graph = populate_color(graph.copy(), pos, color)    
+        for color in colors:
+            # Make a copy of the graph, add the color, run fill_colors again.
+            filled_graph = populate_color(graph.copy(), pos, color)
             if is_populated(filled_graph):
                 return filled_graph
             else:
-                continue 
+                continue
 
-def populate_color(graph, pos, color):    
+def populate_color(graph, pos, color):
     """
-    Place the next guess of the color for the chosen position in the graph and then iterate. 
-   
+    Place the next guess of the color for the chosen position in the graph and then iterate.
+
     graph : The networkx sudoku graph for which to place the next color.
     pos   : The integer position at which to place the color.
-    color : The string color to fill at the particular position. 
+    color : The string color to fill at the particular position.
 
     returns : Graph with the populated color or the same graph if there are no colors left.
-    """ 
+    """
     graph.nodes[pos]['color'] = str(color)
-    new_graph = fill_colors(graph)           
+    new_graph = fill_colors(graph)
     if (new_graph == None):
         return graph
     else:
@@ -159,7 +159,7 @@ def populate_color(graph, pos, color):
 
 def is_populated(graph):
     """
-    Returns whether or not that graph is completely populated (i.e. if 
+    Returns whether or not that graph is completely populated (i.e. if
     each box has been filled in.
 
     graph : The networkx sudoku graph to test.
@@ -167,8 +167,8 @@ def is_populated(graph):
     returns : True if each spot is filled in, False otherwise.
     """
     size = int(math.sqrt(len(graph.nodes)))
-    colors = []                       
-    for node in range(1, size*size+1):      
+    colors = []
+    for node in range(1, size*size+1):
        colors.append(graph.nodes[node]['color'])
     for color in colors:
         if color == '':
@@ -179,7 +179,7 @@ def display_sudoku(graph):
     """
     Print the sudoku graph to the console.
     Prints blank spaces as "-" as to align numbers when visualizing.
-   
+
     graph : Networkx sudoku graph to print to the console.
     """
     size = int(math.sqrt(len(graph.nodes)))
@@ -187,8 +187,8 @@ def display_sudoku(graph):
     for node in range(1, size*size+1):
         colors.append(graph.nodes[node]['color'])
     for i in range(size*size):
-        if colors[i] == '': 
-            colors[i] = '-'     
+        if colors[i] == '':
+            colors[i] = '-'
     for i in range(size):
         print(colors[i*size:i*size+size])
     print()
@@ -203,7 +203,7 @@ def main():
     sudoku = create_general_graph(int(math.sqrt(len(input_string))))
     for l in range(len(input_string)):
         sudoku.nodes[l+1]["color"] = input_string[l]
-    
+
     # Print the starting configuraton.
     print('Starting board:')
     display_sudoku(sudoku)
