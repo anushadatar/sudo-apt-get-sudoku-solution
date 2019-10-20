@@ -6,7 +6,7 @@ The **coloring** of a simple graph refers the configuration where each vertex of
 
 The **four color theorem** asserts that for any planar graph (a graph where no edge crosses another edge), the chromatic number of that planar graph is no greater than four. While this theorem was proposed as a conjecture in the 1850s, it was not formally proven until 1976. Prior to that, there were both fallacious proofs that were accepted (and then later rejected) and adoption of approximations like the Five Color Theorem. The actual four color theorem was proven in 1979 using a computer program that eliminated each possible type of counterexample. This proof was one of the first major computer-aided proofs.
 
-The study of graph coloring has a variety of practical applications - classic ones include scheduling and register allocation. We chose to explore the application of graph coloring to solving Sudoku puzzles. 
+The study of graph coloring has a variety of practical applications - classic ones include scheduling and register allocation. We chose to explore the application of graph coloring to solving Sudoku puzzles.
 
 # The Sudoku Graph
 Sudoku puzzles require players to populate boxes within a grid with numbers such that each row, column, and box contains a set of unique digits. Each puzzle contains preloaded clues to constrain the total number of possible solutions.  
@@ -27,3 +27,5 @@ These puzzles can be represented as sudoku graphs, which are undirected graphs w
 - Talk about runtime depending on how far we get.
 
 In general, graph coloring is computationally complex. Finding the chromatic number of a graph is an NP-hard problem. NP stands for non-deterministic polynomial acceptable problems, and problems that are NP-hard are at least as difficult as problems that are NP-Complete. NP-Complete problems cannot be solved in polynomial time, but a potential solution can be validated in polynomial time - so solving the problem requires exhaustively testing all types of possible cases, which is both time and computationally intensive. Meanwhile, finding a 3-coloring for a graph is an NP-complete problem. While advances in graph theory and computational infrastructure mean that solving these NP-hard/NP-complete problems is certainly possible, there is still great overhead associated with them.
+
+Our algorithm produces a valid solution, but it does so very slowly. In the end we had a potential max time complexity of O((m^N)\*N)  and a space complexity of O(m*N),  where m is the number of colors/numbers in a given puzzle and N is the number of spaces. Since our implementation has to create a new iteration of the solution for every possible color/number that each space could be, it has m possible total iterations to create, and each of these iterations must loop through all N of the spaces within the sudoku puzzle. This has a chance of happening at most N times
