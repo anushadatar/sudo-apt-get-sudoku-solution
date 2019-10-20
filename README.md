@@ -6,7 +6,7 @@ The **coloring** of a simple graph refers the configuration where each vertex of
 
 The **four color theorem** asserts that for any planar graph (a graph where no edge crosses another edge), the chromatic number of that planar graph is no greater than four. While this theorem was proposed as a conjecture in the 1850s, it was not formally proven until 1976. Prior to that, there were both fallacious proofs that were accepted (and then later rejected) and adoption of approximations like the Five Color Theorem. The actual four color theorem was proven in 1979 using a computer program that eliminated each possible type of counterexample. This proof was one of the first major computer-aided proofs.
 
-The study of graph coloring has a variety of practical applications - classic ones include scheduling and register allocation. We chose to explore the application of graph coloring to solving Sudoku puzzles. 
+The study of graph coloring has a variety of practical applications - classic ones include scheduling and register allocation. We chose to explore the application of graph coloring to solving Sudoku puzzles.
 
 # The Sudoku Graph
 Sudoku puzzles require players to populate boxes within a grid with numbers such that each row, column, and box contains a set of unique digits. Each puzzle contains preloaded clues to constrain the total number of possible solutions.  
@@ -21,6 +21,20 @@ These puzzles can be represented as sudoku graphs, which are undirected graphs w
 
 - general explanation of algorithm + connections to graph theory, depending on whether or not we backtrack
 - probably some graphics/screenshots/code pictures
+
+In order to fully "color" the sudoku with the correct number in each box, we start by finding which node has the most colored neighbors. Once we have found this node, we narrow down the possible colors it can be by removing all the colors that its neighbors have. The algorithm inserts one of the possibilities into the graph, and repeats the process of finding the next node to fill.
+
+If the color was correct, it will keep adding colors until the entire puzzle is solved. If for any node its neighbors already have 9 different colors, the solution is incorrect because we know that the graph can be colored using exactly 9 colors. In this case where it happened to guess an incorrect solution it will go back to that decision point and try a different color, to see if it works with that one. This is a common tactic called backtracking, used when you are slowly working towards a solution by making guesses to get closer.
+
+<p align="center">
+  <img src="https://static.javatpoint.com/tutorial/daa/images/backtracking-introduction.png"/></p>
+  <p align="center">Image of a backtracking algorithm from javatpoint.com<p align="center">
+
+We were able to generalize the solver to solve a sudoku of any size, although it takes a lot longer the bigger they get. In the cases of a non-standard sudoku board, the number of colors simply corresponds to the number of rows/columns in the grid, as in a normal 9x9 puzzle.
+
+<p align="center">
+  <img src="sudokuScreenshot.png"/></p>
+  <p align="center">Our script solving a 9x9 sudoku grid <p align="center">
 
 ## Evaluation
 
