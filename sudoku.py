@@ -9,40 +9,16 @@ import networkx as nx
 import math
 import matplotlib.pyplot as plt
 
+# The length of each row/column on the sudoku board.
 SIZE = 4
 
-
-def blank_graph_edges(graph, dim):
-    """
-    Returns edges for a blank graph based on the dimension.
-    """
-    for x in range(1, 16, 4):
-        for i in range(x, x+3):
-            for j in range(i+1, x+4):
-                graph.add_edge(i, j)
-
-    for x in range(1, 5):
-        for i in range(x, x+9, 4):
-            for j in range(i+4, x+13, 4):
-                graph.add_edge(i, j)
-
-    graph.add_edges_from([(1, 6), (2, 5), (3, 8), (4, 7), (9, 14), (10, 13), (11, 16), (12, 15)])
-    return graph
-
-
-def create_blank_graph(dim):
-    """
-    Returns blank sudoku graph of specified dimensions.
-    Dimensions are for the ENTIRE row/column, not a
-    single box (single box dimensios is sqrt(dim).
-    """
-    graph = nx.Graph()
-    graph.add_nodes_from(range(1, dim**2 + 1))
-    blank_graph_edges(graph, dim)
-    return graph
-
-
 def create_general_graph(size):
+    """
+    Create a general sudoku graph for specified size.
+
+    size : Integer value of the row length of the graph.
+    returns : networkx sudoku graph of stated size.
+    """
     rowLists = []
     for row in range(size):
         listOfNums = [*range(row*size+1, row*size + size+1, 1)]
@@ -75,6 +51,13 @@ def create_general_graph(size):
 
 
 def get_box_nums(size):
+    """
+    Get the coordinates for the positions on the graph.
+    
+    size : The length of a single row or column in the graph.
+    returns : List of the indices for the graph.
+    """
+
     boxStarts = []
     for row in range(0, size, int(math.sqrt(size))):
         for start in range(row*size+1, row*size + size+1, int(math.sqrt(size))):
@@ -83,6 +66,14 @@ def get_box_nums(size):
 
 
 def optimal_spot(graph, adj):
+    """
+    Determine the optimal spot to determine the color for, based on the number 
+    of existing prepopulated vertices.
+    
+    graph : The sudoku graph used in the problem.
+    adj : The adjacency matrix associated with the graph.
+    """
+ 
     pos = 0
     max = 0
     for k in adj.keys():
@@ -98,6 +89,16 @@ def optimal_spot(graph, adj):
 
 
 def choose_color(graph, adj, position):
+    """
+    Determine which of the available colors should be placed
+    in a given position.
+
+    graph : The sudoku graph used in the problem.
+    adj : The adjacency matrix associated with the graph.
+    position: The position of the box to choose the color for.
+
+    color: Returns integer value of the color that the box should be.
+    """
     # position = optimal_spot(graph, adj)
     adjacentVertices = adj[position]
     usedColors = set()
@@ -109,6 +110,12 @@ def choose_color(graph, adj, position):
 
 
 def fill_colors(graph):
+    """
+    Use a graph coloring strategy to populate the graph
+    with the appropiate colors to solve the puzzle.
+
+    graph : The graph containing the puzzle to solve.
+    """
     colored = 0
     size = len(graph.nodes)
     for node in graph.nodes:
@@ -124,6 +131,11 @@ def fill_colors(graph):
 
 
 def display_sudoku(graph):
+    """
+    Print the sudoku graph to the console.
+    
+    graph : Graph to print to the console.
+    """
     size = int(math.sqrt(len(graph.nodes)))
     colors = []
     for node in range(1, size*size+1):
@@ -134,7 +146,10 @@ def display_sudoku(graph):
 
 
 def main():
+    # String containing the values to pre-populate in the sudoku board.
     input_string = ['3', '', '4', '2', '', '', '', '', '', '', '', '', '2', '', '', '3']
+
+    # Create and populate networkx graph for sudoku board.
     sudoku = create_general_graph(SIZE)
     for l in range(len(input_string)):
         sudoku.nodes[l+1]["color"] = input_string[l]
