@@ -10,7 +10,7 @@ import math
 import matplotlib.pyplot as plt
 
 # The length of each row/column on the sudoku board.
-SIZE = 4
+SIZE = 9 
 
 def create_general_graph(size):
     """
@@ -102,11 +102,13 @@ def choose_color(graph, adj, position):
     # position = optimal_spot(graph, adj)
     adjacentVertices = adj[position]
     usedColors = set()
+    unusedColors = []
     for vertex in adjacentVertices.keys():
         usedColors.add(graph.nodes[vertex]['color'])
     for color in range(1, SIZE+1):
         if str(color) not in usedColors:
-            return color
+            unusedColors.append(color)
+    return unusedColors
 
 
 def fill_colors(graph):
@@ -116,19 +118,46 @@ def fill_colors(graph):
 
     graph : The graph containing the puzzle to solve.
     """
-    colored = 0
+        
     size = len(graph.nodes)
-    for node in graph.nodes:
-        if graph.nodes[node]['color'] != '':
-            colored += 1
-    while (colored < size):
-        # display_sudoku(graph)
-        adjacent = nx.to_dict_of_dicts(graph)
-        pos = optimal_spot(graph, adjacent)
-        color = choose_color(graph, adjacent, pos)
-        graph.nodes[pos]['color'] = str(color)
-        colored += 1
+    display_sudoku(graph)
+    adjacent = nx.to_dict_of_dicts(graph)
+    pos = optimal_spot(graph, adjacent)
+    colors = choose_color(graph, adjacent, pos)
+    if len(colors) != 0:
+        for color in colors: 
+            # Make a copy of the graph, add the color, run fill_colors again          
+            filled_graph = populate_color(graph.copy(), pos, color)    
+            if is_solution(filled_graph):
+                return filled_graph
+            else:
+                continue 
 
+def populate_color(graph, pos, color):    
+    
+    graph.nodes[pos]['color'] = str(color)
+#    if is_solution(graph):
+ #       return graph
+  #  else:
+#    display_sudoku(graph)
+ 
+    new_graph = fill_colors(graph)           
+    if (new_graph == None):
+        return graph
+    else:
+        return new_graph
+
+def is_solution(graph):
+    size = int(math.sqrt(len(graph.nodes)))
+    colors = []                       
+    for node in range(1, size*size+1):      
+       colors.append(graph.nodes[node]['color'])
+    for color in colors:
+        if color == '':
+            print("failed solution")
+            return False
+    print("found solution")
+    return True
 
 def display_sudoku(graph):
     """
@@ -141,24 +170,27 @@ def display_sudoku(graph):
     for node in range(1, size*size+1):
         colors.append(graph.nodes[node]['color'])
     for i in range(size):
+        if color[i] == '': 
+            color[i] = 0     
+    for i in range(size):
         print(colors[i*size:i*size+size])
     print()
 
 
 def main():
     # String containing the values to pre-populate in the sudoku board.
-    input_string = ['3', '', '4', '2', '', '', '', '', '', '', '', '', '2', '', '', '3']
-
+    # input_string = ['', '', '4', '3', '', '', '', '', '', '', '', '', '', '2', '3', '']
+    input_string = ['9', '', '', '6', '4', '', '', '', '3', '2','7','','','9','','5','8','','','1','','5','8','','','','','','9','','','','','7','','','','','7','9','6','5','8','','','','','2','','','','','4','','','','','','5','3','','6','','','5','1','','7','','','2','8','4','','','','1','6','','','5']
     # Create and populate networkx graph for sudoku board.
-    sudoku = create_general_graph(SIZE)
+    sudoku = create_general_graph(int(math.sqrt(len(input_string))))
     for l in range(len(input_string)):
         sudoku.nodes[l+1]["color"] = input_string[l]
     # print(adjacent)
     print('Starting board:')
     display_sudoku(sudoku)
-    fill_colors(sudoku)
+    completed_board = fill_colors(sudoku)
     print('Completed board')
-    display_sudoku(sudoku)
+    display_sudoku(completed_board)
     # plt.subplot(121)
     # nx.draw(sudoku, with_labels=True, font_weight='bold')
     # plt.show()
