@@ -53,7 +53,7 @@ def create_general_graph(size):
 def get_box_nums(size):
     """
     Get the coordinates for the positions on the graph.
-    
+
     size : The length of a single row or column in the graph.
     returns : List of the indices for the graph.
     """
@@ -67,13 +67,13 @@ def get_box_nums(size):
 
 def optimal_spot(graph, adj):
     """
-    Determine the optimal spot to determine the color for, based on the number 
+    Determine the optimal spot to determine the color for, based on the number
     of existing prepopulated vertices.
-    
+
     graph : The sudoku graph used in the problem.
     adj : The adjacency matrix associated with the graph.
     """
- 
+
     pos = 0
     max = 0
     for k in adj.keys():
@@ -133,7 +133,7 @@ def fill_colors(graph):
 def display_sudoku(graph):
     """
     Print the sudoku graph to the console.
-    
+
     graph : Graph to print to the console.
     """
     size = int(math.sqrt(len(graph.nodes)))
