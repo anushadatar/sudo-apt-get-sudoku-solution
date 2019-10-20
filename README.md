@@ -6,8 +6,14 @@ The **coloring** of a simple graph refers the configuration where each vertex of
 
 The **four color theorem** asserts that for any planar graph (a graph where no edge crosses another edge), the chromatic number of that planar graph is no greater than four. While this theorem was proposed as a conjecture in the 1850s, it was not formally proven until 1976. Prior to that, there were both fallacious proofs that were accepted (and then later rejected) and adoption of approximations like the Five Color Theorem. The actual four color theorem was proven in 1979 using a computer program that eliminated each possible type of counterexample. This proof was one of the first major computer-aided proofs.
 
+The study of graph coloring has a variety of practical applications - classic ones include scheduling and register allocation. We chose to explore the application of graph coloring to solving Sudoku puzzles.
+
 # The Sudoku Graph
-- general explanation of the sudoku graph and maybe an image
+Sudoku puzzles require players to populate boxes within a grid with numbers such that each row, column, and box contains a set of unique digits. Each puzzle contains preloaded clues to constrain the total number of possible solutions.  
+These puzzles can be represented as sudoku graphs, which are undirected graphs where each node is connected to each additional node in its row, each additional node in its column, and each node in its box.
+<p align="center">
+  <img src="https://i.gyazo.com/dc6b6fd8b23f778ca57a14906a9f5eea.png" width="300px" height="300px"/></p>
+  <p align="center">Image of Sudoku Graph, from Wikipedia<p align="center">
 
 # Graph Coloring for Sudoku
 ## Implementation
